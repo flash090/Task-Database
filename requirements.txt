@@ -1,0 +1,6 @@
+flask
+cs50
+python-dotenv
+flask-session
+openai
+#google-generativeai

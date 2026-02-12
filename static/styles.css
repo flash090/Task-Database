@@ -1,0 +1,164 @@
+/* CS50x Final Project - AI Todolist 样式 */
+
+/* 子任务区域样式 */
+.subtasks-container {
+    margin-top: 0.5rem;
+    padding-left: 1.5rem;
+    /* 缩进 */
+    border-left: 2px solid #f0f0f0;
+    margin-left: 0.5rem;
+}
+
+.subtask-item {
+    display: flex;
+    align-items: center;
+    padding: 0.25rem 0;
+    font-size: 0.9rem;
+    color: #818181;
+}
+
+/* ========== 全局样式 ========== */
+body {
+    background: white;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container {
+    max-width: 700px;
+}
+
+/* ========== 标题区 ========== */
+header h1 {
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+header p {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* ========== 主卡片 ========== */
+.main-card {
+    border: none;
+    border-radius: 16px;
+    background: white;
+}
+
+/* ========== AI 折叠区域 ========== */
+.ai-toggle-section .btn-link {
+    color: #667eea;
+    font-size: 0.95rem;
+}
+
+.ai-toggle-section .btn-link:hover {
+    color: #764ba2;
+}
+
+.ai-input-area {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+}
+
+.ai-input-area .form-control {
+    border: 2px solid #ffffff;
+}
+
+.ai-input-area .form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+/* ========== AI 预览卡片 ========== */
+.ai-preview {
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========== 快速添加输入框 ========== */
+.quick-add-wrapper {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+.quick-add-input input {
+    font-size: 1rem;
+    padding: 10px;
+    background: transparent;
+}
+
+.quick-add-input input:focus {
+    outline: none;
+    background: white;
+    border-radius: 6px;
+}
+
+.quick-add-input input::placeholder {
+    color: #adb5bd;
+}
+
+/* ========== 任务列表 ========== */
+/* .task-list: 不设置max-height，让页面整体滚动 */
+
+/* ========== 任务项 ========== */
+.task-card {
+    border: 1px solid #e9ecef;
+    transition: all 0.2s;
+}
+
+.task-card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-color: #dee2e6;
+}
+
+/* ========== 复选框 ========== */
+.form-check-input {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.form-check-input:checked {
+    background-color: #667eea;
+    border-color: #667eea;
+}
+
+/* ========== 空状态 ========== */
+#empty-state {
+    color: #adb5bd;
+    font-size: 0.9rem;
+}
+
+/* ========== 响应式设计 ========== */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+
+    header h1 {
+        font-size: 1.8rem;
+    }
+
+    .main-card .card-body {
+        padding: 1.5rem !important;
+    }
+}
+
+/* ========== 加载动画 ========== */
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+}

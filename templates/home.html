@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, width=device-width">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Custom CSS -->
+  <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+
+  <title>AI-Powered Task Database Project</title>
+</head>
+
+<body style="background-color: white;">
+  <div class="container mt-4">
+
+    <!-- 主内容区域 -->
+    <div class="p-3">
+
+      <!-- AI 区域（可折叠） -->
+      <div class="ai-toggle-section mb-3">
+        <button class="btn btn-link text-decoration-none w-100 text-start p-0" type="button" data-bs-toggle="collapse"
+          data-bs-target="#aiSection">
+          <span id="ai-toggle-icon">▶</span>
+          <strong>AI Smart Add</strong>
+          <small class="text-muted ms-2">Try</small>
+        </button>
+      </div>
+
+      <!-- AI 输入区（折叠） -->
+      <div class="collapse" id="aiSection">
+        <div class="ai-input-area mb-4 p-3 bg-light rounded">
+          <div class="input-group mb-2">
+            <input type="text" id="ai-input" class="form-control"
+              placeholder="describe your task" autocomplete="off">
+            <button class="btn btn-primary" onclick="askAI()">
+              <span id="ai-btn-text">✨Parse</span>
+              <span id="ai-loading" class="spinner-border spinner-border-sm d-none"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- AI Preview Card (Initially Hidden) -->
+        <div id="ai-preview" class="card mb-4 ai-preview shadow-sm" style="display: none;">
+          <div class="card-body">
+            <h5 class="card-title text-primary"><i class="bi bi-stars"></i> AI Suggestion</h5>
+            <div class="row g-2 mb-3">
+              <div class="col-md-6">
+                <label class="form-label small text-muted">Title</label>
+                <input type="text" id="ai-title" class="form-control">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label small text-muted">Category</label>
+                <select id="ai-category" class="form-select">
+                  <option value="Study">Study</option>
+                  <option value="Work">Work</option>
+                  <option value="Life">Life</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label small text-muted">Priority</label>
+                <select id="ai-priority" class="form-select">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- AI Subtasks Preview Area -->
+            <div class="mb-3">
+              <label class="form-label small text-muted">Subtasks</label>
+              <div id="ai-subtasks-container" class="border rounded p-2 bg-light">
+                <!-- Subtasks will be injected here by JS -->
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2">
+              <button class="btn btn-outline-secondary btn-sm" onclick="cancelAI()">Cancel</button>
+              <button class="btn btn-primary btn-sm" onclick="confirmAI()">Confirm & Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="my-3">
+
+      <!-- 任务列表标题 -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="mb-0">My Tasks</h6>
+        <div class="d-flex gap-2 align-items-center">
+          <span class="text-muted small">Filter by:</span>
+          <select id="filter-priority" class="form-select form-select-sm" style="width: auto;" onchange="applyFilter()">
+            <option value="all">All Priority</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+          <select id="filter-category" class="form-select form-select-sm" style="width: auto;" onchange="applyFilter()">
+            <option value="all">All Category</option>
+            <option value="Study">Study</option>
+            <option value="Work">Work</option>
+            <option value="Life">Life</option>
+            <option value="Other">Other</option>
+          </select>
+          <span id="task-count" class="badge bg-secondary">0</span>
+        </div>
+      </div>
+
+      <!-- Quick Add Task (Manual) - Single Row Style -->
+      <div class="card mb-4 main-card shadow-sm">
+        <div class="card-body py-2">
+          <div class="d-flex align-items-center">
+            <!-- Disabled checkbox for visual consistency -->
+            <input type="checkbox" class="form-check-input me-3" disabled>
+
+            <div class="flex-grow-1 d-flex align-items-center gap-2">
+              <input type="text" id="quick-add-title" class="form-control border-0 px-0 shadow-none"
+                placeholder="Add a new task..." style="font-weight: 500;">
+
+              <select id="quick-add-priority" class="form-select form-select-sm border-0 bg-light" style="width: auto;">
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="3">3</option>
+              </select>
+
+              <select id="quick-add-category" class="form-select form-select-sm border-0 bg-light" style="width: auto;">
+                <option value="Other">Other</option>
+                <option value="Study">Study</option>
+                <option value="Work">Work</option>
+                <option value="Life">Life</option>
+              </select>
+            </div>
+
+            <div class="ms-3">
+              <button class="btn btn-sm btn-primary rounded-circle" onclick="quickAddTask()" title="Add">
+                <i class="bi bi-plus-lg"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 任务列表 -->
+      <div id="task-list" class="task-list">
+        <!-- 空状态 -->
+        <div id="empty-state" class="text-center text-muted py-4">
+          <p class="mb-1">No tasks yet</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom JS -->
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+
+  <!-- AI 折叠状态切换 -->
+  <script>
+    document.getElementById('aiSection').addEventListener('show.bs.collapse', function () {
+      document.getElementById('ai-toggle-icon').textContent = '▼';
+    });
+    document.getElementById('aiSection').addEventListener('hide.bs.collapse', function () {
+      document.getElementById('ai-toggle-icon').textContent = '▶';
+    });
+  </script>
+</body>
+
+</html>
